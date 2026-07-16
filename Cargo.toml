@@ -1,0 +1,20 @@
+[package]
+name = "herdr-navigator"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.6.1", features = ["derive"] }
+colored = "3.1.1"
+lazy-regex = "3.6.0"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+thiserror = "2.0.18"
+
+[lints.clippy]
+correctness = "warn"
+all = "warn"
+pedantic = "warn"
+nursery = "warn"
+missing_errors_doc = { level = "allow", priority = 1 }
+missing_panics_doc = { level = "allow", priority = 1 }
