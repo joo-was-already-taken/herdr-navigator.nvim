@@ -61,7 +61,7 @@ function M.navigate(direction)
 
   if win == new_win then
     local cmd = { "herdr", "pane", "focus", "--direction", direction, "--current" }
-    vim.fn.system(cmd)
+    vim.fn.jobstart(cmd)
   end
 end
 
