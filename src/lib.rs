@@ -86,3 +86,51 @@ pub fn is_foreground_process_vim() -> Result<bool, Error> {
     }
     Ok(false)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_is_vim() {
+        #[rustfmt::skip]
+        let yes = [
+            // core view and fzf
+            "view", "gview", "fzf", "gfzf",
+            // core vi/vim variants
+            "vi", "vim", "vix", "vimx", "gvi", "gvim", "gvix", "gvimx",
+            // nvim variants
+            "nvi", "nvim", "nvix", "nvimx", "gnvi", "gnvim", "gnvix", "gnvimx",
+            // lvim variants
+            "lvi", "lvim", "lvix", "lvimx", "glvi", "glvim", "glvix", "glvimx",
+            // lnvim variants
+            "lnvi", "lnvim", "lnvix", "lnvimx", "glnvi", "glnvim", "glnvix", "glnvimx",
+            // diff variants
+            "vimdiff", "nvimdiff", "gvimdiff", "viewdiff", "fzfdiff", "lvimdiff",
+        ];
+        #[rustfmt::skip]
+        let no = [
+            // close but incorrect prefix/suffix
+            "nview", "fzf-tmux", "neovim", "myvim", "vims", "vim2", "svim",
+            // substring matches that shouldn't match due to anchors
+            "avim", "vima", "xnvim", "nvim-wrapped",
+            // random things
+            "bash", "zsh", "tmux", "herdr", "nano", "hx", "emacs",
+        ];
+
+        for name in yes {
+            assert!(
+                is_vim(name),
+                "Expected '{}' to be recognized as a vim name",
+                name
+            );
+        }
+        for name in no {
+            assert!(
+                !is_vim(name),
+                "Expected '{}' to NOT be recognized as a vim name",
+                name
+            );
+        }
+    }
+}
