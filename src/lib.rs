@@ -76,12 +76,13 @@ pub fn is_foreground_process_vim() -> Result<bool, Error> {
                 .and_then(|obj| obj.get("name"))
                 .and_then(|v| v.as_str())
         });
-    let mut is_any_vim = false;
     for name in names {
         let Some(name) = name else {
             return Err(HerdrError::UnexpectedJson.into());
         };
-        is_any_vim = is_any_vim || is_vim(name);
+        if is_vim(name) {
+            return Ok(true);
+        }
     }
-    Ok(is_any_vim)
+    Ok(false)
 }
