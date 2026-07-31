@@ -6,22 +6,32 @@ local validate = config.validate_opts
 describe("validate_opts", function()
   describe("accepts valid opts", function()
     it("accepts an empty table", function()
-      assert.has_no.errors(function() validate({}) end)
+      assert.has_no.errors(function()
+        validate({})
+      end)
     end)
 
     it("accepts nil opts (caller guard)", function()
-      assert.has_no.errors(function() validate({}) end)
+      assert.has_no.errors(function()
+        validate({})
+      end)
     end)
 
     it("accepts a valid enabled function", function()
       assert.has_no.errors(function()
-        validate({ enabled = function() return true end })
+        validate({
+          enabled = function()
+            return true
+          end,
+        })
       end)
     end)
 
     it("accepts a full keys table", function()
       assert.has_no.errors(function()
-        validate({ keys = { left = "<C-h>", right = "<C-l>", up = "<C-k>", down = "<C-j>" } })
+        validate({
+          keys = { left = "<C-h>", right = "<C-l>", up = "<C-k>", down = "<C-j>" },
+        })
       end)
     end)
 
@@ -46,16 +56,18 @@ describe("validate_opts", function()
 
   describe("rejects invalid `enabled`", function()
     local bad_values = {
-      { label = "boolean true",  value = true },
+      { label = "boolean true", value = true },
       { label = "boolean false", value = false },
-      { label = "string",        value = "yes" },
-      { label = "number",        value = 1 },
-      { label = "table",         value = {} },
+      { label = "string", value = "yes" },
+      { label = "number", value = 1 },
+      { label = "table", value = {} },
     }
 
     for _, case in ipairs(bad_values) do
       it("rejects enabled = " .. case.label, function()
-        assert.has_error( function() validate({ enabled = case.value }) end, nil)
+        assert.has_error(function()
+          validate({ enabled = case.value })
+        end, nil)
       end)
     end
 
@@ -129,5 +141,4 @@ describe("validate_opts", function()
     assert.is_false(ok)
     assert.matches("herdr%-navigator%.nvim", err)
   end)
-
 end)

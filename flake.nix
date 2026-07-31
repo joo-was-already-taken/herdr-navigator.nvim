@@ -22,6 +22,7 @@
         };
         cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
         binaryVersion = cargoToml.package.version;
+        fenixChannel = inputs'.fenix.packages.stable;
         nvimPluginVersion = let
           versionLua = builtins.readFile ./lua/herdr-navigator/version.lua;
           match = builtins.match ''.*version = "([^"]+)".*'' versionLua;
@@ -30,7 +31,7 @@
         version = assert binaryVersion == nvimPluginVersion; nvimPluginVersion;
       in {
         packages.herdr-navigator = let
-          toolchain = inputs'.fenix.packages.stable.withComponents [ "cargo" "rustc" ];
+          toolchain = fenixChannel.withComponents [ "cargo" "rustc" ];
           rustPlatform = pkgs.makeRustPlatform { cargo = toolchain; rustc = toolchain; };
         in rustPlatform.buildRustPackage {
           inherit version meta;
@@ -58,9 +59,24 @@
           installPhase = "touch $out";
         };
 
+        checks.formatting = pkgs.stdenvNoCC.mkDerivation {
+          name = "herdr-navigator-nvim-formatting";
+          src = ./.;
+          nativeBuildInputs = [
+            pkgs.stylua
+            (fenixChannel.withComponents [ "cargo" "rustfmt" ])
+          ];
+          checkPhase = ''
+            stylua --check lua/ spec/
+            cargo fmt --check
+          '';
+          doCheck = true;
+          installPhase = "touch $out";
+        };
+
         devShells.default = pkgs.mkShell {
           packages = [
-            (inputs'.fenix.packages.stable.withComponents [
+            (fenixChannel.withComponents [
               "cargo"
               "clippy"
               "rust-src"
@@ -72,6 +88,7 @@
             pkgs.cargo-audit
             pkgs.lua-language-server
             pkgs.luajitPackages.busted
+            pkgs.stylua
           ];
         };
       };

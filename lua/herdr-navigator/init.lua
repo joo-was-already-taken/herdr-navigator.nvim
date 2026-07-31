@@ -13,7 +13,9 @@ local config_mod = require("herdr-navigator.config")
 
 --- @type herdr_navigator.Config
 local default_config = {
-  enabled = function() return true end,
+  enabled = function()
+    return true
+  end,
   keys = {
     left = "<C-h>",
     right = "<C-l>",
