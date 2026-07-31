@@ -74,6 +74,19 @@
           installPhase = "touch $out";
         };
 
+        checks.rust-tests = let
+          toolchain = fenixChannel.withComponents [ "cargo" "rustc" ];
+          rustPlatform = pkgs.makeRustPlatform { cargo = toolchain; rustc = toolchain; };
+        in rustPlatform.buildRustPackage {
+          inherit meta;
+          name = "herdr-navigator-rust-tests";
+          src = ./.;
+          cargoLock.lockFile = ./Cargo.lock;
+          buildPhase = ":";
+          installPhase = "touch $out";
+          doCheck = true;
+        };
+
         devShells.default = pkgs.mkShell {
           packages = [
             (fenixChannel.withComponents [
