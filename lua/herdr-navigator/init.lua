@@ -1,4 +1,5 @@
 local M = {}
+local config_mod = require("herdr-navigator.config")
 
 --- @class herdr_navigator.Config
 --- @field enabled? fun(): boolean
@@ -75,6 +76,7 @@ function M.setup(opts)
   M.config = vim.deepcopy(default_config)
 
   if opts ~= nil and next(opts) ~= nil then
+    config_mod.validate_opts(opts)
     update_config(opts)
   end
 

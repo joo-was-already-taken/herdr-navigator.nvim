@@ -45,6 +45,19 @@
           src = ./.;
         };
 
+        checks.lua-tests = pkgs.stdenvNoCC.mkDerivation {
+          name = "herdr-navigator-nvim-lua-tests";
+          src = ./.;
+          nativeBuildInputs = [
+            pkgs.luajitPackages.busted
+          ];
+          doCheck = true;
+          checkPhase = ''
+            busted --verbose spec/
+          '';
+          installPhase = "touch $out";
+        };
+
         devShells.default = pkgs.mkShell {
           packages = [
             (inputs'.fenix.packages.stable.withComponents [
@@ -58,6 +71,7 @@
             pkgs.jq
             pkgs.cargo-audit
             pkgs.lua-language-server
+            pkgs.luajitPackages.busted
           ];
         };
       };
