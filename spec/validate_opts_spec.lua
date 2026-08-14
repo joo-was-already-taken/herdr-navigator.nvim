@@ -1,3 +1,4 @@
+--- @diagnostic disable: undefined-field, assign-type-mismatch
 package.path = "./lua/?.lua;./lua/?/init.lua;" .. package.path
 
 local config = require("herdr-navigator.config")
