@@ -59,6 +59,17 @@
           installPhase = "touch $out";
         };
 
+        checks.lua-lsp = pkgs.stdenvNoCC.mkDerivation {
+          name = "herdr-navigator-nvim-lua-lsp";
+          src = ./.;
+          nativeBuildInputs = [ pkgs.lua-language-server ];
+          checkPhase = ''
+            HOME="$(mktemp -d)" lua-language-server --check=.
+          '';
+          installPhase = "touch $out";
+          doCheck = true;
+        };
+
         checks.formatting = pkgs.stdenvNoCC.mkDerivation {
           name = "herdr-navigator-nvim-formatting";
           src = ./.;
